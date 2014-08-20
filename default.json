@@ -1,0 +1,39 @@
+{
+  "variables": {
+    "home": "{{env `HOME`}}",
+    "access_key": "{{env `AWS_ACCESS_KEY`}}",
+    "secret_key": "{{env `AWS_SECRET_KEY`}}"
+  },
+  "builders": [
+    {
+      "type": "amazon-ebs",
+      "access_key": "{{user `access_key`}}",
+      "secret_key": "{{user `secret_key`}}",
+      "region": "us-east-1",
+      "source_ami": "ami-588c7f30",
+      "instance_type": "m3.medium",
+      "ssh_username": "ubuntu",
+      "ami_name": "puppet-masterless-packer"
+    },
+    {
+      "type": "virtualbox-ovf",
+       "source_path": "{{user `home`}}/.vagrant.d/boxes/trusty64/0/virtualbox/box.ovf",
+       "ssh_username": "vagrant",
+       "ssh_password": "vagrant",
+       "headless": true,
+       "ssh_wait_timeout": "30s",
+       "shutdown_command": "sudo shutdown -h now"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "wget https://apt.puppetlabs.com/puppetlabs-release-precise.deb",
+        "sudo dpkg -i puppetlabs-release-precise.deb",
+        "sudo apt-get update -qy",
+        "sudo apt-get install -qy puppet-common"
+      ]
+    }
+  ]
+}
