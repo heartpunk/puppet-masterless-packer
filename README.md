@@ -11,5 +11,6 @@ To build the images, run:
 
 
 ```shell
+vagrant box add ubuntu/trusty64
 AWS_SECRET_KEY=your_secret_key AWS_ACCESS_KEY=your_access_key packer build default.json
 ```
